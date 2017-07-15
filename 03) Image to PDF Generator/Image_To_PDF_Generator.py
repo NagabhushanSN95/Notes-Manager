@@ -12,27 +12,75 @@ import argparse
 import os
 import shutil
 
+META_DATA_TITLE_KEY = 'Title'
+META_DATA_AUTHOR_KEY = 'Author'
+NUM_PAGES_CONST = 'NumPages'
 
-def read_inputs():
+
+def prompt(prompt_string):
+	response = raw_input(prompt_string)
+	if response == 'Y':
+		return True
+	else:
+		return False
+
+
+def setup_args():
 	parser = argparse.ArgumentParser(description='Create PDF from images')
-	parser.add_argument('--bookmarks', '-b', required=True, help="Bookmarks file", type=str)
-	parser.add_argument('--title', '-t', required=True, help="Title of PDF", type=str)
-	parser.add_argument('--author', '-a', help="Author Name (Optional)", type=str)
+	parser.add_argument('--bookmarks', '-b', help="Bookmarks file (default: ./Bookmarks.txt",
+						type=str, default='./Bookmarks.txt')
+	parser.add_argument('--meta-data', '-md', help="Meta-Data file (default: ./Meta-Data.txt",
+						type=str, default='./Meta-Data.txt')
 	parser.add_argument('--directory', '-d', help="Path to directory containing images (default: ./Images/)",
 						type=str, default='./Images')
 	args = parser.parse_args()
-	
+	return args
+
+
+def validate_inputs(args):
+	# Check if Bookmarks file exists
+	bookmarks_file_name = args.bookmarks
+	bookmarks_file = file(bookmarks_file_name, 'r')
+	if not os.path.exists(bookmarks_file):
+		print("The Bookmarks file '" + bookmarks_file_name + "' doesn't exist.\n")
+		print("Exiting Program...")
+		exit()
+
+	# Check if Meta-Data file exists
+	meta_data_file_name = args.meta_data
+	meta_data_file = file(meta_data_file_name, 'r')
+	if not os.path.exists(meta_data_file):
+		print("The Meta-Data file '" + meta_data_file_name + "' doesn't exist.\n")
+		print("Exiting Program...")
+		exit()
+
+	# Check if Images directory exists
+	images_directory_name = args.images
+	images_directory = file(images_directory_name, 'r')
+	if not os.path.exists(images_directory):
+		print("The directory '" + images_directory_name + "' doesn't exist.\n")
+		print("Exiting Program...")
+		exit()
+
+
+def read_inputs(args):
 	bookmarks_file_name = args.bookmarks
 	bookmarks_file = file(bookmarks_file_name, 'r')
 	bookmarks_data = bookmarks_file.read().splitlines()
 	bookmarks_data = [line.strip() for line in bookmarks_data if line.strip()]
 	bookmarks_file.close()
 
-	title = args.title
-	author = args.author
+	meta_data_file_name = args.meta_data
+	meta_data_file = file(meta_data_file_name, 'r')
+	meta_data_list = meta_data_file.read().splitlines()
+	meta_data_list = [line.strip() for line in meta_data_list if line.strip()]
+	# Convert list into a Dictionary
+	meta_data = dict(map(*[iter(meta_data_list)]*2))
+	meta_data_file.close()
+
 	directory = args.directory
 
-	return bookmarks_file_name, bookmarks_data, title, author, directory
+	return bookmarks_file_name, bookmarks_data, meta_data, directory
 
 
 def generate_page_nos(bookmarks_data):
@@ -53,7 +101,7 @@ def generate_page_nos(bookmarks_data):
 			current_level += 1
 			if current_level > 1:
 				levels[current_level - 2] += 1
-		elif 'NumPages' in current_line:
+		elif NUM_PAGES_CONST in current_line:
 			num_pages = extract_num_pages(current_line)
 			if num_pages > 0:
 				synthesize_page_nos(levels, current_level, num_pages, page_nos)
@@ -95,14 +143,14 @@ def reset_levels(levels, start_level):
 		levels[i] = 0
 
 
-def generate_meta_data(title, author, bookmarks_data):
+def generate_meta_data(meta_data_dict, bookmarks_data):
 	meta_data = list()
 	meta_data.append("InfoBegin")
 	meta_data.append("InfoKey: Title")
-	meta_data.append("InfoValue: " + title)
+	meta_data.append("InfoValue: " + meta_data_dict[META_DATA_TITLE_KEY])
 	meta_data.append("InfoBegin")
 	meta_data.append("InfoKey: Author")
-	meta_data.append("InfoValue: " + author)
+	meta_data.append("InfoValue: " + meta_data_dict[META_DATA_AUTHOR_KEY])
 	current_level = 0
 	current_page_num = 1
 	for i in range(0, len(bookmarks_data)):
@@ -113,10 +161,10 @@ def generate_meta_data(title, author, bookmarks_data):
 			current_level += 1
 		elif current_line == '}':
 			current_level -= 1
-		elif 'NumPages' not in current_line:
-			if ('NumPages' not in next_to_next_line) or (extract_num_pages(next_to_next_line) > 0):
+		elif NUM_PAGES_CONST not in current_line:
+			if (NUM_PAGES_CONST not in next_to_next_line) or (extract_num_pages(next_to_next_line) > 0):
 				append_bookmark(current_line, current_level, current_page_num, meta_data)
-		elif 'NumPages' in current_line:
+		elif NUM_PAGES_CONST in current_line:
 			current_page_num += extract_num_pages(current_line)
 
 	# print page_nos
@@ -136,13 +184,17 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
 	os.chdir(directory)
 	num_files = len([name for name in os.listdir('.') if os.path.isfile(name)])
 	num_pages = len(page_nos)
+	# Provide a prompt to continue or exit
 	if num_files < num_pages:
-		print "Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. " \
+		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
 					"But the directory '" + directory + "' has only " + str(num_files) + " files."
+					"Do you want to proceed? [Y/n]:"):
+			exit()
 	elif num_files > num_pages:
-		print "Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. " \
+		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. " \
 					"But the directory '" + directory + "' has " + str(num_files) + " files. " \
-					"First " + str(num_pages) + " files will be renamed"
+					"First " + str(num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
+			exit()
 
 	for fileName in sorted(os.listdir('.')):
 		extension = os.path.splitext(fileName)[1]
@@ -193,17 +245,19 @@ def clean():
 def main():
 	# Remove temporary directory ./temp if it exists
 	if os.path.exists("./temp"):
-		response = raw_input("Directory temp already exists. It needs to be removed to proceed. "
-						"Do you want to remove it now? [Y/n]:")
-		if response == "Y":
+		if(prompt("Directory temp already exists. It needs to be removed to proceed. "
+						"Do you want to remove it now? [Y/n]:")):
 			shutil.rmtree("./temp")
 		else:
 			print "Exiting program"
 			exit()
 
-	(bookmarks_file_name, bookmarks_data, title, author, directory) = read_inputs()
+	args = setup_args()
+	validate_inputs(args)
+	(bookmarks_file_name, bookmarks_data, meta_data_dict, directory) = read_inputs(args)
+	title = meta_data_dict[META_DATA_TITLE_KEY]
 	page_numbers = generate_page_nos(bookmarks_data)
-	meta_data = generate_meta_data(title, author, bookmarks_data)
+	meta_data = generate_meta_data(meta_data_dict, bookmarks_data)
 	rename_files(directory, title, page_numbers, bookmarks_file_name)
 	os.mkdir("./temp")
 	convert_to_pdf(directory)

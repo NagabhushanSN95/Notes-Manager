@@ -1,4 +1,17 @@
 ============================================================
+          Notes Manager v0.3.1 (15-07-2017)
+============================================================
+ - Image to PDF Generator:
+	- Added new optional argument - Meta-Data file with default value 'Meta-Data.txt'
+ 	- Title and Author will be read from Meta-Data file and hence these arguments are not required
+	- Default value for argument 'Bookmarks file' set to 'Bookmarks.txt' and hence the argument is no longer mandatory
+	- Added prompts for warnings whether to proceed or not
+	- Code refined and Optimised
+============================================================
+============================================================
+
+
+============================================================
           Notes Manager v0.3 (15-07-2017)
 ============================================================
  - Added Image to PDF Generator
