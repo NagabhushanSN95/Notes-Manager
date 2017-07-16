@@ -1,0 +1,147 @@
+{
+    1. Unit 01
+    {
+        1. Formulae
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        2. Notes
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        3. Derivations
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        4. Important Results
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        5. Problems
+        {
+            NumPages = 0
+            Offset = 0
+        }
+    }
+    2. Unit 02
+    {
+        1. Formulae
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        2. Notes
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        3. Derivations
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        4. Important Results
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        5. Problems
+        {
+            NumPages = 0
+            Offset = 0
+        }
+    }
+    3. Unit 03
+    {
+        1. Formulae
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        2. Notes
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        3. Derivations
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        4. Important Results
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        5. Problems
+        {
+            NumPages = 0
+            Offset = 0
+        }
+    }
+    4. Unit 04
+    {
+        1. Formulae
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        2. Notes
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        3. Derivations
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        4. Important Results
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        5. Problems
+        {
+            NumPages = 0
+            Offset = 0
+        }
+    }
+    5. Unit 05
+    {
+        1. Formulae
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        2. Notes
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        3. Derivations
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        4. Important Results
+        {
+            NumPages = 0
+            Offset = 0
+        }
+        5. Problems
+        {
+            NumPages = 0
+            Offset = 0
+        }
+    }
+    6. Revision
+    {
+        NumPages = 0
+        Offset = 0
+    }
+}
