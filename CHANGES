@@ -1,4 +1,17 @@
 ============================================================
+          Notes Manager v0.3.2 (16-07-2017)
+============================================================
+ - Image to PDF Generator:
+	- In Bookmarks, offset can be added
+ 	- In Bookmarks, individual page numbers can be mentioned
+ 	- Bug Fix: Program used to crash when the Bookmarks file or Meta-Data file or Images folder doesn't exist
+ 	- Bug Fix: Program used to crash when reading meta-data (if it exists)
+ 	- Code refined and Optimised
+============================================================
+============================================================
+
+
+============================================================
           Notes Manager v0.3.1 (15-07-2017)
 ============================================================
  - Image to PDF Generator:
