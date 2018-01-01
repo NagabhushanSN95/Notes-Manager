@@ -218,16 +218,14 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
 	# Provide a prompt to continue or exit
 	if num_files < num_pages:
 		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
-																								  "But the directory '" + directory + "' has only " + str(
-			num_files) + " files."
-						 "Do you want to proceed? [Y/n]:"):
+					"But the directory '" + directory + "' has only " + str(num_files) + " files."
+					"Do you want to proceed? [Y/n]:"):
 			print "Exiting program..."
 			exit()
 	elif num_files > num_pages:
 		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
-																								  "But the directory '" + directory + "' has " + str(
-			num_files) + " files. "
-						 "First " + str(num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
+					"But the directory '" + directory + "' has " + str(num_files) + " files. "
+					"First " + str(num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
 			print "Exiting program..."
 			exit()
 

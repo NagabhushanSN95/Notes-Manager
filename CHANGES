@@ -4,7 +4,9 @@
  - Image to PDF Generator:
 	- Minor bug fix. Earlier, if the file 'Image_To_PDF_Generator.py' was imported into another python program,
 	    it used to execute the main method in 'Image_To_PDF_Generator.py'
-	- .idea directory removed.
+	- File formatted
+ - .idea directory removed.
+ - .gitignore updated.
 ============================================================
 ============================================================
 
