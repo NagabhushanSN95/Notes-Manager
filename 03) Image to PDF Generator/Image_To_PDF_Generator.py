@@ -74,7 +74,7 @@ def read_inputs(args):
 	meta_data_list = meta_data_file.read().splitlines()
 	meta_data_list = [line.strip() for line in meta_data_list if line.strip()]
 	# Convert list into a Dictionary
-	meta_data = dict(map(None, *[iter(meta_data_list)]*2))
+	meta_data = dict(map(None, *[iter(meta_data_list)] * 2))
 	meta_data_file.close()
 
 	directory = args.directory
@@ -85,7 +85,7 @@ def read_inputs(args):
 def generate_page_nos(bookmarks_data):
 	num_levels = calc_num_levels(bookmarks_data)
 
-	levels = [0] * (num_levels-1)
+	levels = [0] * (num_levels - 1)
 	page_nos = []
 	current_level = 0
 	for i in range(0, len(bookmarks_data)):
@@ -218,14 +218,16 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
 	# Provide a prompt to continue or exit
 	if num_files < num_pages:
 		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
-					"But the directory '" + directory + "' has only " + str(num_files) + " files."
-					"Do you want to proceed? [Y/n]:"):
+																								  "But the directory '" + directory + "' has only " + str(
+			num_files) + " files."
+						 "Do you want to proceed? [Y/n]:"):
 			print "Exiting program..."
 			exit()
 	elif num_files > num_pages:
 		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
-					"But the directory '" + directory + "' has " + str(num_files) + " files. "
-					"First " + str(num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
+																								  "But the directory '" + directory + "' has " + str(
+			num_files) + " files. "
+						 "First " + str(num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
 			print "Exiting program..."
 			exit()
 
@@ -279,8 +281,8 @@ def clean():
 def main():
 	# Remove temporary directory ./temp if it exists
 	if os.path.exists("./temp"):
-		if(prompt("Directory temp already exists. It needs to be removed to proceed. "
-						"Do you want to remove it now? [Y/n]:")):
+		if (prompt("Directory temp already exists. It needs to be removed to proceed. "
+				   "Do you want to remove it now? [Y/n]:")):
 			shutil.rmtree("./temp")
 		else:
 			print "Exiting program..."
@@ -300,4 +302,6 @@ def main():
 	clean()
 	print "Process Complete"
 
-main()
+
+if __name__ == '__main__':
+	main()
