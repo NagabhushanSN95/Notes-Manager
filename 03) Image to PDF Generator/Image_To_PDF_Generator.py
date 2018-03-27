@@ -76,7 +76,7 @@ def read_inputs(args):
 	meta_data_list = meta_data_file.read().splitlines()
 	meta_data_list = [line.strip() for line in meta_data_list if line.strip()]
 	# Convert list into a Dictionary
-	meta_data = dict(map(None, *[iter(meta_data_list)]*2))
+	meta_data = dict(map(None, *[iter(meta_data_list)] * 2))
 	meta_data_file.close()
 
 	directory = args.directory
@@ -99,7 +99,7 @@ def rotate_files(directory, degrees):
 def generate_page_nos(bookmarks_data):
 	num_levels = calc_num_levels(bookmarks_data)
 
-	levels = [0] * (num_levels-1)
+	levels = [0] * (num_levels - 1)
 	page_nos = []
 	current_level = 0
 	for i in range(0, len(bookmarks_data)):
@@ -293,8 +293,8 @@ def clean():
 def main():
 	# Remove temporary directory ./temp if it exists
 	if os.path.exists("./temp"):
-		if(prompt("Directory temp already exists. It needs to be removed to proceed. "
-						"Do you want to remove it now? [Y/n]:")):
+		if (prompt("Directory temp already exists. It needs to be removed to proceed. "
+				   "Do you want to remove it now? [Y/n]:")):
 			shutil.rmtree("./temp")
 		else:
 			print "Exiting program..."

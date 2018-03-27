@@ -10,6 +10,19 @@
 
 
 ============================================================
+          Notes Manager v0.4.1 (01-01-2018)
+============================================================
+ - Image to PDF Generator:
+	- Minor bug fix. Earlier, if the file 'Image_To_PDF_Generator.py' was imported into another python program,
+	    it used to execute the main method in 'Image_To_PDF_Generator.py'
+	- File formatted
+ - .idea directory removed.
+ - .gitignore updated.
+============================================================
+============================================================
+
+
+============================================================
           Notes Manager v0.4 (16-07-2017)
 ============================================================
  - PyCharm files (.idea directory) added
