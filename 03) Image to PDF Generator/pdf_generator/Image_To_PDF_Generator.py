@@ -20,7 +20,7 @@ PAGE_NOS_CONST = 'PageNos'
 
 
 def prompt(prompt_string):
-	response = raw_input(prompt_string)
+	response = input(prompt_string)
 	if response == 'Y':
 		return True
 	else:
@@ -67,13 +67,13 @@ def validate_inputs(args):
 
 def read_inputs(args):
 	bookmarks_file_name = args.bookmarks
-	bookmarks_file = file(bookmarks_file_name, 'r')
+	bookmarks_file = open(bookmarks_file_name, 'r')
 	bookmarks_data = bookmarks_file.read().splitlines()
 	bookmarks_data = [line.strip() for line in bookmarks_data if line.strip()]
 	bookmarks_file.close()
 
 	meta_data_file_name = args.meta_data
-	meta_data_file = file(meta_data_file_name, 'r')
+	meta_data_file = open(meta_data_file_name, 'r')
 	meta_data_list = meta_data_file.read().splitlines()
 	meta_data_list = [line.strip() for line in meta_data_list if line.strip()]
 	# Convert list into a Dictionary
@@ -225,7 +225,7 @@ def append_bookmark(bookmark_name, level, page_num, meta_data):
 
 
 def rename_files(directory, title, page_nos, bookmarks_file_name):
-	print "Renaming Files"
+	print("Renaming Files")
 	i = 0
 	os.chdir(directory)
 	num_files = len([name for name in os.listdir('.') if os.path.isfile(name)])
@@ -235,13 +235,13 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
 		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
 					"But the directory '" + directory + "' has only " + str(num_files) + " files."
 					"Do you want to proceed? [Y/n]:"):
-			print "Exiting program..."
+			print("Exiting program...")
 			exit()
 	elif num_files > num_pages:
 		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
 					"But the directory '" + directory + "' has " + str(num_files) + " files. "
 					"First " + str(num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
-			print "Exiting program..."
+			print("Exiting program...")
 			exit()
 
 	for fileName in sorted(os.listdir('.')):
@@ -251,34 +251,34 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
 		if i >= num_pages:
 			break
 	os.chdir("../")
-	print "Renaming Files complete"
+	print("Renaming Files complete")
 
 
 def convert_to_pdf(directory):
-	print "Converting Images to PDFs"
+	print("Converting Images to PDFs")
 	for file_name in sorted(os.listdir(directory)):
 		file_name = file_name.replace(" ", "\ ")
 		command = "convert " + directory + "/" + file_name + " ./temp/" + os.path.splitext(file_name)[0] + ".pdf"
 		os.system(command)
-	print "Converting Images to PDFs complete"
+	print("Converting Images to PDFs complete")
 
 
 def merge_files():
-	print "Merging files into single PDF"
+	print("Merging files into single PDF")
 	cmd = "pdftk "
 	for file_name in sorted(os.listdir("./temp")):
 		file_name = file_name.replace(" ", "\ ")
 		cmd += "./temp/" + file_name + " "
 	cmd += "output ./temp/merged.pdf"
 	os.system(cmd)
-	print "Merging complete"
+	print("Merging complete")
 
 
 def add_bookmarks(title, meta_data):
 	cmd = "pdftk ./temp/merged.pdf dump_data > ./temp/meta_data.txt"
 	os.system(cmd)
 	# Append additional meta-data and bookmarks to existing meta-data
-	meta_data_file = file("./temp/meta_data.txt", 'a')
+	meta_data_file = open("./temp/meta_data.txt", 'a')
 	meta_data_file.writelines("%s\n" % item for item in meta_data)
 	meta_data_file.close()
 	title1 = title.replace(" ", "\ ")
@@ -287,7 +287,7 @@ def add_bookmarks(title, meta_data):
 
 
 def clean():
-	print "Cleaning Residual and Temporary Files"
+	print("Cleaning Residual and Temporary Files")
 	shutil.rmtree("./temp")
 
 
@@ -298,7 +298,7 @@ def main():
 				   "Do you want to remove it now? [Y/n]:")):
 			shutil.rmtree("./temp")
 		else:
-			print "Exiting program..."
+			print("Exiting program...")
 			exit()
 
 	args = setup_args()
@@ -314,7 +314,7 @@ def main():
 	merge_files()
 	add_bookmarks(title, meta_data)
 	clean()
-	print "Process Complete"
+	print("Process Complete")
 
 
 if __name__ == '__main__':
