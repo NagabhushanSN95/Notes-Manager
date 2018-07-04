@@ -35,6 +35,8 @@ def setup_args():
 						type=str, default='./Meta-Data.txt')
 	parser.add_argument('--directory', '-d', help="Path to directory containing images (default: ./Images/)",
 						type=str, default='./Images')
+	parser.add_argument('--rotate', '-r', help="Angle in degrees to rotate all the images clockwise (default: 0)",
+						type=str, default=0)
 	parser.add_argument('--gui', '-g', help="Start GUI (Graphical User Interface)", action='store_true')
 	args = parser.parse_args()
 	return args
@@ -79,8 +81,20 @@ def read_inputs(args):
 	meta_data_file.close()
 
 	directory = args.directory
+	if not directory.endswith('/'):
+		directory = directory + '/'
+	rotate = args.rotate
 
-	return bookmarks_file_name, bookmarks_data, meta_data, directory
+	return bookmarks_file_name, bookmarks_data, meta_data, directory, rotate
+
+
+def rotate_files(directory, degrees):
+	if degrees != 0:
+		print("Rotating files by " + degrees + " clockwise")
+		for fileName in os.listdir(directory):
+			cmd = 'convert ' + directory + fileName + ' -rotate ' + degrees + ' ' + directory + fileName
+			os.system(cmd)
+		print("Rotating Files complete")
 
 
 def generate_page_nos(bookmarks_data):
@@ -289,7 +303,8 @@ def main():
 
 	args = setup_args()
 	validate_inputs(args)
-	(bookmarks_file_name, bookmarks_data, meta_data_dict, directory) = read_inputs(args)
+	(bookmarks_file_name, bookmarks_data, meta_data_dict, directory, rotate) = read_inputs(args)
+	rotate_files(directory, rotate)
 	title = meta_data_dict[META_DATA_TITLE_KEY]
 	page_numbers = generate_page_nos(bookmarks_data)
 	meta_data = generate_meta_data(meta_data_dict, bookmarks_data)
