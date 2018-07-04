@@ -35,6 +35,7 @@ def setup_args():
 						type=str, default='./Meta-Data.txt')
 	parser.add_argument('--directory', '-d', help="Path to directory containing images (default: ./Images/)",
 						type=str, default='./Images')
+	parser.add_argument('--gui', '-g', help="Start GUI (Graphical User Interface)", action='store_true')
 	args = parser.parse_args()
 	return args
 
