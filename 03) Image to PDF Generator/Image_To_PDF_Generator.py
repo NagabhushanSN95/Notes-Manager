@@ -194,6 +194,7 @@ def generate_meta_data(meta_data_dict, bookmarks_data):
 		current_line = bookmarks_data[i]
 		if i < len(bookmarks_data) - 2:
 			next_to_next_line = bookmarks_data[i + 2]
+		# noinspection PyUnboundLocalVariable
 		if current_line == '{':
 			current_level += 1
 		elif current_line == '}':
@@ -224,7 +225,7 @@ def append_bookmark(bookmark_name, level, page_num, meta_data):
 
 
 def rename_files(directory, title, page_nos, bookmarks_file_name):
-	print "Renaming Files"
+	print("Renaming Files")
 	i = 0
 	os.chdir(directory)
 	num_files = len([name for name in os.listdir('.') if os.path.isfile(name)])
@@ -234,13 +235,13 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
 		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
 					"But the directory '" + directory + "' has only " + str(num_files) + " files."
 					"Do you want to proceed? [Y/n]:"):
-			print "Exiting program..."
+			print("Exiting program...")
 			exit()
 	elif num_files > num_pages:
 		if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
 					"But the directory '" + directory + "' has " + str(num_files) + " files. "
 					"First " + str(num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
-			print "Exiting program..."
+			print("Exiting program...")
 			exit()
 
 	for fileName in sorted(os.listdir('.')):
@@ -250,27 +251,27 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
 		if i >= num_pages:
 			break
 	os.chdir("../")
-	print "Renaming Files complete"
+	print("Renaming Files complete")
 
 
 def convert_to_pdf(directory):
-	print "Converting Images to PDFs"
+	print("Converting Images to PDFs")
 	for file_name in sorted(os.listdir(directory)):
 		file_name = file_name.replace(" ", "\ ")
 		command = "convert " + directory + "/" + file_name + " ./temp/" + os.path.splitext(file_name)[0] + ".pdf"
 		os.system(command)
-	print "Converting Images to PDFs complete"
+	print("Converting Images to PDFs complete")
 
 
 def merge_files():
-	print "Merging files into single PDF"
+	print("Merging files into single PDF")
 	cmd = "pdftk "
 	for file_name in sorted(os.listdir("./temp")):
 		file_name = file_name.replace(" ", "\ ")
 		cmd += "./temp/" + file_name + " "
 	cmd += "output ./temp/merged.pdf"
 	os.system(cmd)
-	print "Merging complete"
+	print("Merging complete")
 
 
 def add_bookmarks(title, meta_data):
@@ -286,7 +287,7 @@ def add_bookmarks(title, meta_data):
 
 
 def clean():
-	print "Cleaning Residual and Temporary Files"
+	print("Cleaning Residual and Temporary Files")
 	shutil.rmtree("./temp")
 
 
@@ -297,7 +298,7 @@ def main():
 				   "Do you want to remove it now? [Y/n]:")):
 			shutil.rmtree("./temp")
 		else:
-			print "Exiting program..."
+			print("Exiting program...")
 			exit()
 
 	args = setup_args()
@@ -313,7 +314,7 @@ def main():
 	merge_files()
 	add_bookmarks(title, meta_data)
 	clean()
-	print "Process Complete"
+	print("Process Complete")
 
 
 if __name__ == '__main__':
