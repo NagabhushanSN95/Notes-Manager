@@ -30,7 +30,7 @@ def prompt(prompt_string):
 		return False
 
 
-def execute_cmd(cmd, print_cmd = False):
+def execute_cmd(cmd, print_cmd=False):
 	if print_cmd:
 		print("terminal$ " + cmd)
 	if isinstance(cmd, list):
@@ -311,7 +311,7 @@ def scale_to_a4(directory):
 			new_height = width / a4_aspect_ratio
 			convert_to_a4(directory, file_name, new_width, new_height)
 		else:
-			shutil.copyfile(directory + "/" +file_name, "./temp/scaled_images")
+			shutil.copyfile(directory + "/" + file_name, "./temp/scaled_images")
 			return
 	print("Scaling Images to A4 size complete")
 
@@ -366,7 +366,7 @@ def main():
 	# Remove temporary directory ./temp if it exists
 	if os.path.exists("./temp"):
 		if (prompt("Directory temp already exists. It needs to be removed to proceed. "
-				   "Do you want to remove it now? [Y/n]:")):
+					"Do you want to remove it now? [Y/n]:")):
 			shutil.rmtree("./temp")
 		else:
 			print("Exiting program...")
