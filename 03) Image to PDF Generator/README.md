@@ -1,8 +1,9 @@
 # Image to PDF Generator
 
 This script renames the scanned images in the `Images` directory using the data given in `Bookmarks` file. Then it 
-converts the images into PDFs using `imagemagick` tool. Then it merges the individual PDF files into a single PDF 
-file using `pdftk` tool. Then it adds meta-data and bookmarks from the respective files into the PDF file.
+scales the images to A4 size and converts the images into PDFs using `imagemagick` tool. Then it merges the individual 
+PDF files into a single PDF file using `pdftk` tool. Then it adds meta-data and bookmarks from the respective files 
+into the PDF file.
 
    So, in brief, this script generates a full-fledged PDF notes from scanned images.
 

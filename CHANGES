@@ -1,8 +1,18 @@
 ============================================================
+          Notes Manager v0.4.3 (01-10-2018)
+============================================================
+ - Image to PDF Generator:
+	- Images will be scaled to A4 size
+ 	- README.md updated
+============================================================
+============================================================
+
+
+============================================================
           Notes Manager v0.4.2 (27-03-2018)
 ============================================================
  - Image to PDF Generator:
-    - Added if __name__ == '__main__'
+	- Added if __name__ == '__main__'
 	- Added support to rotate all images
  	- README.md updated
 ============================================================
@@ -14,7 +24,7 @@
 ============================================================
  - Image to PDF Generator:
 	- Minor bug fix. Earlier, if the file 'Image_To_PDF_Generator.py' was imported into another python program,
-	    it used to execute the main method in 'Image_To_PDF_Generator.py'
+		it used to execute the main method in 'Image_To_PDF_Generator.py'
 	- File formatted
  - .idea directory removed.
  - .gitignore updated.
