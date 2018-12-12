@@ -12,10 +12,10 @@ class Mode(Enum):
 
     @staticmethod
     def get_mode(mode):
-        if mode == 'Generate-PDF':
-            return Mode.GENERATE_PDF
-        else:
-            raise Exception('Invalid Mode: ' + mode)
+        for valid_mode in Mode:
+            if mode == valid_mode.value:
+                return valid_mode
+        raise Exception('Invalid Mode: ' + mode)
 
 
 class Action(Enum):
@@ -32,8 +32,12 @@ class Action(Enum):
         return self.value
 
     @staticmethod
-    def get_mode(action):
+    def get_action(action):
         for valid_action in Action:
             if action == valid_action.value:
                 return valid_action
         raise Exception('Invalid Action: ' + action)
+
+    @staticmethod
+    def get_all_actions():
+        actions = [action for action in Action]
