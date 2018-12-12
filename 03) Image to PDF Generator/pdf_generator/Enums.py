@@ -17,6 +17,11 @@ class Mode(Enum):
                 return valid_mode
         raise Exception('Invalid Mode: ' + mode)
 
+    @staticmethod
+    def get_all_modes():
+        modes = [mode for mode in Mode]
+        return modes
+
 
 class Action(Enum):
     RENAME_IMAGES = 'Rename Images'
@@ -41,3 +46,4 @@ class Action(Enum):
     @staticmethod
     def get_all_actions():
         actions = [action for action in Action]
+        return actions
