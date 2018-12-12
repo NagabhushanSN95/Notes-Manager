@@ -9,8 +9,11 @@
 # ./Image_To_PDF_Generator.py -b Bookmarks.txt -md Meta-Data.txt -d ./Images/
 
 import argparse
+import math
 import os
+import shlex
 import shutil
+import subprocess
 
 META_DATA_TITLE_KEY = 'Title'
 META_DATA_AUTHOR_KEY = 'Author'
@@ -25,6 +28,17 @@ def prompt(prompt_string):
 		return True
 	else:
 		return False
+
+
+def execute_cmd(cmd, print_cmd=False):
+	if print_cmd:
+		print("terminal$ " + cmd)
+	if isinstance(cmd, list):
+		commands = cmd
+	else:
+		commands = shlex.split(cmd)
+	output = subprocess.Popen(commands, stdout=subprocess.PIPE).communicate()[0]
+	return output
 
 
 def setup_args():
@@ -195,6 +209,7 @@ def generate_meta_data(meta_data_dict, bookmarks_data):
 		current_line = bookmarks_data[i]
 		if i < len(bookmarks_data) - 2:
 			next_to_next_line = bookmarks_data[i + 2]
+		# noinspection PyUnboundLocalVariable
 		if current_line == '{':
 			current_level += 1
 		elif current_line == '}':
@@ -254,11 +269,68 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
 	print("Renaming Files complete")
 
 
-def convert_to_pdf(directory):
-	print("Converting Images to PDFs")
+# Todo: Move this to a separate class in a separate file
+def scale_to_a4(directory):
+	print("Scaling Images to A4 size")
+	os.mkdir("./temp/scaled_images")
+	"""
+	Display Width:
+	convert DSP_03.jpg -format "%[fx:w]" info:
+	Display Height:
+	convert DSP_03.jpg -format "%[fx:h]" info:
+	
+	Aspect ratio of A4 is 1/sqrt(2)=0.707
+	If aspect ratio is less than 0.707, then width has to be increased. Else, height has to be increased.
+	Eg: 1932x3304
+	Add 20 pixels margin: 1972x3344
+	Calculate the new width/height: 2336x3304; 2364x3344
+	Size of A4 is 297mmx210mm
+	Calculate density: 3304/29.7=111.2458 pixels/cm; 3344/29.7=112.5926
+	Command:
+	convert DSP_03.jpg -gravity Center -extent 2336x3304 -density 111.2458 -units pixelspercentimeter out.jpg
+	convert DSP_03.jpg -gravity Center -extent 2336x3304 -density 111.2458 -units pixelspercentimeter out.pdf
+	
+	convert DSP_03.jpg -gravity Center -extent 2364x3344 -density 112.5926 -units pixelspercentimeter out2.jpg
+	convert DSP_03.jpg -gravity Center -extent 2364x3344 -density 112.5926 -units pixelspercentimeter out2.pdf
+	"""
 	for file_name in sorted(os.listdir(directory)):
 		file_name = file_name.replace(" ", "\ ")
-		command = "convert " + directory + "/" + file_name + " ./temp/" + os.path.splitext(file_name)[0] + ".pdf"
+		command = "convert " + directory + "/" + file_name + ' -format "%[fx:w]" info:'
+		width = float(execute_cmd(command))
+		command = "convert " + directory + "/" + file_name + ' -format "%[fx:h]" info:'
+		height = float(execute_cmd(command))
+		aspect_ratio = width / height
+		a4_aspect_ratio = 1 / math.sqrt(2)
+		if aspect_ratio < a4_aspect_ratio:
+			# Increase Width
+			new_height = height
+			new_width = a4_aspect_ratio * height
+			convert_to_a4(directory, file_name, new_width, new_height)
+		elif aspect_ratio > a4_aspect_ratio:
+			# Increase Height
+			new_width = width
+			new_height = width / a4_aspect_ratio
+			convert_to_a4(directory, file_name, new_width, new_height)
+		else:
+			shutil.copyfile(directory + "/" + file_name, "./temp/scaled_images")
+			return
+	print("Scaling Images to A4 size complete")
+
+
+def convert_to_a4(directory, file_name, new_width, new_height):
+	density = new_height / 29.7  # Height of A4 = 29.7cm
+	command = "convert " + directory + "/" + file_name + " -gravity Center -extent " + str(new_width) + "x" + \
+				str(new_height) + " -density " + str(density) + " -units pixelspercentimeter ./temp/scaled_images/" \
+				+ file_name
+	execute_cmd(command)
+
+
+def convert_to_pdf(directory):
+	print("Converting Images to PDFs")
+	os.mkdir("./temp/pdfs")
+	for file_name in sorted(os.listdir(directory)):
+		file_name = file_name.replace(" ", "\ ")
+		command = "convert ./temp/scaled_images/" + file_name + " ./temp/pdfs/" + os.path.splitext(file_name)[0] + ".pdf"
 		os.system(command)
 	print("Converting Images to PDFs complete")
 
@@ -266,9 +338,9 @@ def convert_to_pdf(directory):
 def merge_files():
 	print("Merging files into single PDF")
 	cmd = "pdftk "
-	for file_name in sorted(os.listdir("./temp")):
+	for file_name in sorted(os.listdir("./temp/pdfs")):
 		file_name = file_name.replace(" ", "\ ")
-		cmd += "./temp/" + file_name + " "
+		cmd += "./temp/pdfs/" + file_name + " "
 	cmd += "output ./temp/merged.pdf"
 	os.system(cmd)
 	print("Merging complete")
@@ -295,7 +367,7 @@ def main():
 	# Remove temporary directory ./temp if it exists
 	if os.path.exists("./temp"):
 		if (prompt("Directory temp already exists. It needs to be removed to proceed. "
-				   "Do you want to remove it now? [Y/n]:")):
+					"Do you want to remove it now? [Y/n]:")):
 			shutil.rmtree("./temp")
 		else:
 			print("Exiting program...")
@@ -310,6 +382,8 @@ def main():
 	meta_data = generate_meta_data(meta_data_dict, bookmarks_data)
 	rename_files(directory, title, page_numbers, bookmarks_file_name)
 	os.mkdir("./temp")
+	# directory = 'Images/'
+	scale_to_a4(directory)
 	convert_to_pdf(directory)
 	merge_files()
 	add_bookmarks(title, meta_data)
