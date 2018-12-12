@@ -3,14 +3,12 @@
 # Author: Nagabhushan S N
 
 import argparse
-import math
 import os
 import shlex
 import shutil
 import subprocess
 
 import GUI
-
 
 META_DATA_TITLE_KEY = 'Title'
 META_DATA_AUTHOR_KEY = 'Author'
@@ -42,7 +40,7 @@ def delete_temp_dir():
     # Remove temporary directory ./temp if it exists
     if os.path.exists("./temp"):
         if (prompt("Directory temp already exists. It needs to be removed to proceed. "
-                    "Do you want to remove it now? [Y/n]:")):
+                   "Do you want to remove it now? [Y/n]:")):
             shutil.rmtree("./temp")
         else:
             print("Exiting program...")
@@ -66,11 +64,19 @@ def setup_args():
     return args
 
 
-def start_interactor(args: argparse.ArgumentParser):
+def start_interactor(args):
     if args.gui:
-        GUI.main()
+        GUI.main(execute_commands)
     else:
         print('CLI not yet added')
+
+
+def execute_commands(bookmarks_filename: str, metadata_filename: str, images_directory: str, actions: list):
+    print('Executing Commands')
+    print(bookmarks_filename)
+    print(metadata_filename)
+    print(images_directory)
+    print(actions)
 
 
 def main():

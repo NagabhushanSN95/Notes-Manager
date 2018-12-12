@@ -1,15 +1,19 @@
 # Shree KRISHNAya Namaha
 # Graphical Interface
 # Author: Nagabhushan S N
+
 import tkinter
-from tkinter import Button, Entry, Frame, Label, filedialog
+from tkinter import Button, Checkbutton, Entry, Frame, Label, filedialog
 from tkinter.filedialog import askopenfilename
+
+from Enums import Action
 
 
 class NotesManagerGui(Frame):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, execute_function=None):
         Frame.__init__(self, parent)
         self.parent = parent
+        self.execute_function = execute_function
         self.pack()
         self.winfo_toplevel().title('Images to PDF Generator')
 
@@ -17,10 +21,36 @@ class NotesManagerGui(Frame):
         self.res_frame.pack()
         self.add_res_frame()
 
+        self.actions_frame = ActionsFrame(self)
+        self.actions_frame.pack()
+        self.add_actions()
+
+        button = Button(self, text='Execute', command=self.execute)
+        button.pack()
+
     def add_res_frame(self):
         self.res_frame.add_component('Bookmarks: ')
         self.res_frame.add_component('Meta Data: ')
         self.res_frame.add_component('Directory: ', file_chooser=False)
+
+    def add_actions(self):
+        self.actions_frame.add_action(Action.RENAME_IMAGES)
+        self.actions_frame.add_action(Action.SCALE_TO_A4)
+        self.actions_frame.add_action(Action.CONVERT_TO_PDF)
+        self.actions_frame.add_action(Action.MERGE_PDF)
+        self.actions_frame.add_action(Action.NOTIFY_COMPLETION)
+
+    def execute(self):
+        bookmarks_filename = self.res_frame.components[0][1].get()
+        metadata_filename = self.res_frame.components[1][1].get()
+        images_directory = self.res_frame.components[2][1].get()
+        actions = []
+        for action_component in self.actions_frame.components:
+            if action_component[1].get() == 1:
+                action_name = action_component[0].cget('text')
+                actions.append(action_name)
+        self.parent.destroy()
+        self.execute_function(bookmarks_filename, metadata_filename, images_directory, actions)
 
 
 class FileChooserFrame(Frame):
@@ -46,7 +76,7 @@ class FileChooserFrame(Frame):
     def load_file(self, row_num, file_chooser=True):
         if file_chooser:
             filename = askopenfilename(filetypes=(("Text files", "*.txt"),
-                                               ("All files", "*.*")))
+                                                  ("All files", "*.*")))
         else:
             filename = filedialog.askdirectory()
         if filename:
@@ -54,12 +84,35 @@ class FileChooserFrame(Frame):
             self.components[row_num][1].insert(0, filename)
 
 
-def main():
+class ActionsFrame(Frame):
+    def __init__(self, parent=None):
+        Frame.__init__(self, parent)
+        self.parent = parent
+        self.pack()
+        self.components = []
+
+    def add_action(self, action_name):
+        var = tkinter.IntVar()
+        checkbutton = Checkbutton(self, text=action_name, variable=var)
+        checkbutton.pack(anchor=tkinter.W)
+        self.components.append((checkbutton, var))
+
+
+class ButtonsFrame(Frame):
+    def __init__(self, parent=None):
+        Frame.__init__(self, parent)
+        self.parent = parent
+        self.pack()
+        self.components = []
+
+    def add_button(self, button_name, button_function):
+        button = Button(self, text=button_name, command=button_function)
+        button.pack()
+        self.components.append(button)
+
+
+def main(execute_function):
     print('GUI started')
     root = tkinter.Tk()
-    NotesManagerGui(root)
+    NotesManagerGui(root, execute_function)
     root.mainloop()
-
-
-if __name__ == '__main__':
-    main()
