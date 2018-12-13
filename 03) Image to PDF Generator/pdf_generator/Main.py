@@ -8,9 +8,8 @@ import shlex
 import shutil
 import subprocess
 
-import GUI
-
 from data.DataStructures import InputData
+from frontend import GUI
 from validators.InputValidator import InputValidator
 from backend import Helper
 
@@ -70,12 +69,12 @@ def setup_args():
 
 def start_interactor(args):
     if args.gui:
-        GUI.main(execute_commands)
+        GUI.main(execute_callback)
     else:
         print('CLI not yet added')
 
 
-def execute_commands(input_data: InputData):
+def execute_callback(input_data: InputData):
     print('Executing Commands')
     input_validator = InputValidator(input_data)
     input_validator.validate_inputs()

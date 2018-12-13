@@ -28,6 +28,7 @@ class Action(Enum):
     SCALE_TO_A4 = 'Scale to A4 size'
     CONVERT_TO_PDF = 'Convert to PDF'
     MERGE_PDF = 'Merge PDFs'
+    ADD_BOOKMARKS = 'Add Bookmarks in PDF'
     NOTIFY_COMPLETION = 'Notify Task Completion'
 
     def __repr__(self):

@@ -42,6 +42,7 @@ class NotesManagerGui(Frame):
         self.actions_frame.add_action(Action.SCALE_TO_A4)
         self.actions_frame.add_action(Action.CONVERT_TO_PDF)
         self.actions_frame.add_action(Action.MERGE_PDF)
+        self.actions_frame.add_action(Action.ADD_BOOKMARKS)
         self.actions_frame.add_action(Action.NOTIFY_COMPLETION)
 
     def execute(self):
