@@ -11,10 +11,10 @@ from Enums import Action
 
 
 class NotesManagerGui(Frame):
-    def __init__(self, parent=None, execute_function=None):
+    def __init__(self, parent=None, execute_callback=None):
         Frame.__init__(self, parent)
         self.parent = parent
-        self.execute_function = execute_function
+        self.execute_callback = execute_callback
         self.pack()
         self.winfo_toplevel().title('Images to PDF Generator')
 
@@ -25,6 +25,9 @@ class NotesManagerGui(Frame):
         self.actions_frame = ActionsFrame(self)
         self.actions_frame.pack()
         self.add_actions()
+
+        self.inputs_frame = InputsFrame(self)
+        self.inputs_frame.pack()
 
         button = Button(self, text='Execute', command=self.execute)
         button.pack()
@@ -52,10 +55,10 @@ class NotesManagerGui(Frame):
             if action_component[1].get() == 1:
                 action_name = Action.get_action(action_component[0].cget('text'))
                 actions.append(action_name)
+        rotate_angle = self.inputs_frame.components[0][1].get()
         self.parent.destroy()
-        # Todo: Add input for rotation angle
-        input_data = InputData(bookmarks_filename, metadata_filename, images_directory, 0, actions)
-        self.execute_function(input_data)
+        input_data = InputData(bookmarks_filename, metadata_filename, images_directory, rotate_angle, actions)
+        self.execute_callback(input_data)
 
 
 class FileChooserFrame(Frame):
@@ -101,6 +104,25 @@ class ActionsFrame(Frame):
         checkbutton = Checkbutton(self, text=action_name, variable=var)
         checkbutton.pack(anchor=tkinter.W)
         self.components.append((checkbutton, var))
+
+
+class InputsFrame(Frame):
+    def __init__(self, parent=None):
+        Frame.__init__(self, parent)
+        self.parent = parent
+        self.pack()
+        self.components = []
+        self.add_components()
+
+    def add_components(self):
+        rotate_label = Label(self, text='Rotate Angle (in degrees)')
+        rotate_label.grid(row=0, column=0)
+        rotate_entry = Entry(self)
+        rotate_entry.insert(0, '0')
+        rotate_entry.grid(row=0, column=1)
+        rotate_cc_label = Label(self, text='counter-clockwise')
+        rotate_cc_label.grid(row=0, column=2)
+        self.components.append((rotate_label, rotate_entry))
 
 
 class ButtonsFrame(Frame):
