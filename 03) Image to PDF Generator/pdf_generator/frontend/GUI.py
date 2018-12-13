@@ -6,8 +6,8 @@ import tkinter
 from tkinter import Button, Checkbutton, Entry, Frame, Label, filedialog
 from tkinter.filedialog import askopenfilename
 
-from DataStructures import InputData
-from Enums import Action
+from data.DataStructures import InputData
+from data.Enums import Action
 
 
 class NotesManagerGui(Frame):

@@ -4,7 +4,7 @@
 
 import os
 
-from DataStructures import InputData
+from data.DataStructures import InputData
 
 
 class InputValidator:

@@ -9,7 +9,8 @@ import shutil
 import subprocess
 
 import GUI
-from DataStructures import InputData
+
+from data.DataStructures import InputData
 from validators.InputValidator import InputValidator
 from backend import Helper
 
