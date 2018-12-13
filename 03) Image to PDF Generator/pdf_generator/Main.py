@@ -8,10 +8,10 @@ import shlex
 import shutil
 import subprocess
 
+from backend import Helper
 from data.DataStructures import InputData
 from frontend import GUI
 from validators.InputValidator import InputValidator
-from backend import Helper
 
 META_DATA_TITLE_KEY = 'Title'
 META_DATA_AUTHOR_KEY = 'Author'
@@ -76,8 +76,7 @@ def start_interactor(args):
 
 def execute_callback(input_data: InputData):
     print('Executing Commands')
-    input_validator = InputValidator(input_data)
-    input_validator.validate_inputs()
+    InputValidator(input_data).validate_inputs()
     Helper.main(input_data)
 
 

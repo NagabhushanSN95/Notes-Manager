@@ -7,11 +7,9 @@ import shlex
 import shutil
 import subprocess
 
-from backend import BookmarksParser
+from backend.Parser import Parser
 from data.DataStructures import InputData
 from data.Enums import Action
-from backend.MetaDataParser import MetaDataParser
-from data.Constants import META_DATA_AUTHOR_KEY, META_DATA_TITLE_KEY, NUM_PAGES_CONST, OFFSET_CONST, PAGE_NOS_CONST
 
 
 def prompt(prompt_string):
@@ -42,62 +40,6 @@ def rotate_files(directory, degrees):
         print("Rotating Files complete")
 
 
-def generate_meta_data(meta_data_dict, bookmarks_data):
-    meta_data = list()
-    meta_data.append("InfoBegin")
-    meta_data.append("InfoKey: Title")
-    meta_data.append("InfoValue: " + meta_data_dict[META_DATA_TITLE_KEY])
-    meta_data.append("InfoBegin")
-    meta_data.append("InfoKey: Author")
-    meta_data.append("InfoValue: " + meta_data_dict[META_DATA_AUTHOR_KEY])
-    current_level = 0
-    current_page_num = 1
-    for i in range(0, len(bookmarks_data)):
-        current_line = bookmarks_data[i]
-        if i < len(bookmarks_data) - 2:
-            next_to_next_line = bookmarks_data[i + 2]
-        # noinspection PyUnboundLocalVariable
-        if current_line == '{':
-            current_level += 1
-        elif current_line == '}':
-            current_level -= 1
-        elif NUM_PAGES_CONST in current_line:
-            current_page_num += extract_num_pages(current_line)
-        elif OFFSET_CONST in current_line:
-            # Do Nothing
-            continue
-        elif PAGE_NOS_CONST in current_line:
-            current_page_num += len(extract_page_nos(current_line))
-        elif (NUM_PAGES_CONST not in next_to_next_line) or (extract_num_pages(next_to_next_line) > 0):
-            # If NUM_PAGES_CONST is not present in next-to-next-line, then this is the name of a chapter
-            # or something like that and hence has to be added in bookmarks
-            # If next-to-next-line has NumPages>0, then this is the lowest level, but has pages
-            # and hence this has to be added to bookmarks
-            append_bookmark(current_line, current_level, current_page_num, meta_data)
-
-    # print page_nos
-    return meta_data
-
-
-# Todo: Use the one in Bookmark Parser or put it in utils
-def extract_num_pages(line):
-    return int(line.split('=')[1].strip())
-
-
-# Todo: Use the one in Bookmark Parser or put it in utils
-def extract_page_nos(line):
-    page_nos_string = line.split('=')[1].strip()
-    page_nos = [int(page_no) for page_no in page_nos_string.split(',')]
-    return page_nos
-
-
-def append_bookmark(bookmark_name, level, page_num, meta_data):
-    meta_data.append("BookmarkBegin")
-    meta_data.append("BookmarkTitle: " + bookmark_name)
-    meta_data.append("BookmarkLevel: " + str(level))
-    meta_data.append("BookmarkPageNumber: " + str(page_num))
-
-
 def rename_files(directory, title, page_nos, bookmarks_file_name):
     print("Renaming Files")
     i = 0
@@ -106,21 +48,16 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
     num_pages = len(page_nos)
     # Provide a prompt to continue or exit
     if num_files < num_pages:
-        if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
-                                                                                                  "But the directory "
-                                                                                                  "'" + directory +
-                      "' has only " + str(
-            num_files) + " files."
-                         "Do you want to proceed? [Y/n]:"):
+        if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(
+                num_pages) + " pages. But the directory '" + directory + "' has only " + str(
+            num_files) + " files. Do you want to proceed? [Y/n]:"):
             print("Exiting program...")
             exit()
     elif num_files > num_pages:
-        if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(num_pages) + " pages. "
-                                                                                                  "But the directory "
-                                                                                                  "'" + directory +
-                      "' has " + str(
-            num_files) + " files. "
-                         "First " + str(num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
+        if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(
+                num_pages) + " pages. But the directory '" + directory + "' has " + str(
+            num_files) + " files. First " + str(
+            num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
             print("Exiting program...")
             exit()
 
@@ -230,23 +167,23 @@ def clean():
 
 
 def main(input_data: InputData):
-    bookmarks_data = BookmarksParser.get_bookmarks_data(input_data.bookmarks_filepath)
-    metadata_dict = MetaDataParser(input_data.metadata_filepath).metadata_dict
+    parser = Parser(input_data)
     rotate_files(input_data.images_directory_path, input_data.rotate_angle)
-    title = metadata_dict[META_DATA_TITLE_KEY]
-    page_numbers = BookmarksParser.generate_page_nos(bookmarks_data)
-    meta_data = generate_meta_data(metadata_dict, bookmarks_data)
     if Action.RENAME_IMAGES in input_data.actions:
+        title = parser.get_title()
+        page_numbers = parser.get_page_numbers()
         rename_files(input_data.images_directory_path, title, page_numbers, input_data.bookmarks_filepath)
     os.mkdir("./temp")
-    # directory = 'Images/'
     if Action.SCALE_TO_A4 in input_data.actions:
         scale_to_a4(input_data.images_directory_path)
     if Action.CONVERT_TO_PDF in input_data.actions:
         convert_to_pdf(input_data.images_directory_path)
     if Action.MERGE_PDF in input_data.actions:
         merge_files()
-    add_bookmarks(title, meta_data)
+    if Action.ADD_BOOKMARKS in input_data.actions:
+        title = parser.get_title()
+        pdf_bookmarks = parser.get_pdf_bookmarks()
+        add_bookmarks(title, pdf_bookmarks)
     clean()
     if Action.NOTIFY_COMPLETION in input_data.actions:
         print("Process Complete")

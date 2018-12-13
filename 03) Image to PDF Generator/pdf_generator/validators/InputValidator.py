@@ -9,6 +9,7 @@ from data.DataStructures import InputData
 
 class InputValidator:
     def __init__(self, input_data: InputData) -> None:
+        self.input_data = input_data
         self.bookmarks_filepath = input_data.bookmarks_filepath
         self.metadata_filepath = input_data.metadata_filepath
         self.images_directory_path = input_data.images_directory_path
@@ -32,5 +33,3 @@ class InputValidator:
             print("The directory '" + self.images_directory_path + "' doesn't exist.\n")
             print("Exiting Program...")
             exit()
-
-        # Todo: Validate actions
