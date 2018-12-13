@@ -11,6 +11,7 @@ import subprocess
 import GUI
 from DataStructures import InputData
 from validators.InputValidator import InputValidator
+from backend import Helper
 
 META_DATA_TITLE_KEY = 'Title'
 META_DATA_AUTHOR_KEY = 'Author'
@@ -75,9 +76,9 @@ def start_interactor(args):
 
 def execute_commands(input_data: InputData):
     print('Executing Commands')
-    print(input_data.images_directory_path)
     input_validator = InputValidator(input_data)
     input_validator.validate_inputs()
+    Helper.main(input_data)
 
 
 def main():

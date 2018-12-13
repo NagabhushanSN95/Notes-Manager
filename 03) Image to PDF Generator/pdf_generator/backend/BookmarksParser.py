@@ -2,7 +2,7 @@
 # Parse Meta-Data File
 # Author: Nagabhushan S N
 
-from ..data.Constants import NUM_PAGES_CONST, OFFSET_CONST, PAGE_NOS_CONST
+from data.Constants import NUM_PAGES_CONST, OFFSET_CONST, PAGE_NOS_CONST
 
 
 def get_bookmarks_data(bookmarks_filepath):

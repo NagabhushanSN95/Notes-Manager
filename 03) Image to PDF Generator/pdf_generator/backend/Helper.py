@@ -7,10 +7,10 @@ import shlex
 import shutil
 import subprocess
 
-import BookmarksParser
+from backend import BookmarksParser
 from DataStructures import InputData
 from Enums import Action
-from MetaDataParser import MetaDataParser
+from backend.MetaDataParser import MetaDataParser
 from data.Constants import META_DATA_AUTHOR_KEY, META_DATA_TITLE_KEY, NUM_PAGES_CONST, OFFSET_CONST, PAGE_NOS_CONST
 
 
