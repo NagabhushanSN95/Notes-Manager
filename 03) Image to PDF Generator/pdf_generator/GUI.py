@@ -6,6 +6,7 @@ import tkinter
 from tkinter import Button, Checkbutton, Entry, Frame, Label, filedialog
 from tkinter.filedialog import askopenfilename
 
+from DataStructures import InputData
 from Enums import Action
 
 
@@ -44,13 +45,17 @@ class NotesManagerGui(Frame):
         bookmarks_filename = self.res_frame.components[0][1].get()
         metadata_filename = self.res_frame.components[1][1].get()
         images_directory = self.res_frame.components[2][1].get()
+        if not images_directory.endswith('/'):
+            images_directory = images_directory + '/'
         actions = []
         for action_component in self.actions_frame.components:
             if action_component[1].get() == 1:
-                action_name = action_component[0].cget('text')
+                action_name = Action.get_action(action_component[0].cget('text'))
                 actions.append(action_name)
         self.parent.destroy()
-        self.execute_function(bookmarks_filename, metadata_filename, images_directory, actions)
+        # Todo: Add input for rotation angle
+        input_data = InputData(bookmarks_filename, metadata_filename, images_directory, 0, actions)
+        self.execute_function(input_data)
 
 
 class FileChooserFrame(Frame):

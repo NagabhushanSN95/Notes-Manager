@@ -1,24 +1,11 @@
 # Shree KRISHNAya Namaha
 
 
-class FunctionData:
+class InputData:
 
-	def __init__(self, functions, help=None):
-		self.functions = functions
-		self.help = help
-
-	def __str__(self):
-		string = '[ '
-		for function in self.functions:
-			string += function.__name__
-			string += ','
-		string = string[:-1]
-		string += ' ]'
-		return string
-
-
-class CompleteData:
-
-	def __init__(self, input_data, functions_data):
-		self.input_data = input_data
-		self.functions_data = functions_data
+    def __init__(self, bookmarks_filepath, metadata_filepath, images_directory_path, rotate_angle, actions):
+        self.bookmarks_filepath = bookmarks_filepath
+        self.metadata_filepath = metadata_filepath
+        self.images_directory_path = images_directory_path
+        self.rotate_angle = rotate_angle
+        self.actions = actions

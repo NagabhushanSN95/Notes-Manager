@@ -9,6 +9,8 @@ import shutil
 import subprocess
 
 import GUI
+from DataStructures import InputData
+from validators.InputValidator import InputValidator
 
 META_DATA_TITLE_KEY = 'Title'
 META_DATA_AUTHOR_KEY = 'Author'
@@ -71,12 +73,11 @@ def start_interactor(args):
         print('CLI not yet added')
 
 
-def execute_commands(bookmarks_filename: str, metadata_filename: str, images_directory: str, actions: list):
+def execute_commands(input_data: InputData):
     print('Executing Commands')
-    print(bookmarks_filename)
-    print(metadata_filename)
-    print(images_directory)
-    print(actions)
+    print(input_data.images_directory_path)
+    input_validator = InputValidator(input_data)
+    input_validator.validate_inputs()
 
 
 def main():
