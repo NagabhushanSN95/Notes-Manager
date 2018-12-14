@@ -32,12 +32,11 @@ def execute_cmd(cmd, print_cmd=False):
 
 
 def rotate_files(directory, degrees):
-    if degrees != 0:
-        print("Rotating files by " + degrees + " clockwise")
-        for fileName in os.listdir(directory):
-            cmd = 'convert ' + directory + fileName + ' -rotate ' + degrees + ' ' + directory + fileName
-            os.system(cmd)
-        print("Rotating Files complete")
+	print("Rotating files by " + degrees + " clockwise")
+	for fileName in os.listdir(directory):
+		cmd = 'convert "' + directory + fileName + '" -rotate ' + degrees + ' "' + directory + fileName + '"'
+		os.system(cmd)
+	print("Rotating Files complete")
 
 
 def rename_files(directory, title, page_nos, bookmarks_file_name):
@@ -168,7 +167,8 @@ def clean():
 
 def main(input_data: InputData):
     parser = Parser(input_data)
-    rotate_files(input_data.images_directory_path, input_data.rotate_angle)
+	if int(input_data.rotate_angle) != 0:
+		rotate_files(input_data.images_directory_path, input_data.rotate_angle)
     if Action.RENAME_IMAGES in input_data.actions:
         title = parser.get_title()
         page_numbers = parser.get_page_numbers()
