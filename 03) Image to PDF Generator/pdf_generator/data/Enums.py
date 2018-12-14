@@ -29,6 +29,7 @@ class Action(Enum):
     CONVERT_TO_PDF = 'Convert to PDF'
     MERGE_PDF = 'Merge PDFs'
     ADD_BOOKMARKS = 'Add Bookmarks in PDF'
+    CLEAN_TEMP_FILES = 'Clean temp files'
     NOTIFY_COMPLETION = 'Notify Task Completion'
 
     def __repr__(self):

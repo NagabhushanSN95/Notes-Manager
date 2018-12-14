@@ -184,6 +184,7 @@ def main(input_data: InputData):
         title = parser.get_title()
         pdf_bookmarks = parser.get_pdf_bookmarks()
         add_bookmarks(title, pdf_bookmarks)
-    # clean()
+    if Action.CLEAN_TEMP_FILES in input_data.actions:
+        clean()
     if Action.NOTIFY_COMPLETION in input_data.actions:
         print("Process Complete")
