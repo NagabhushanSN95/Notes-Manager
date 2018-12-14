@@ -59,7 +59,7 @@ class NotesManagerGui(Frame):
                 actions.append(action_name)
         rotate_angle = self.inputs_frame.components[0][1].get()
         self.parent.destroy()
-        input_data = InputData(bookmarks_filename, metadata_filename, images_directory, rotate_angle, actions)
+        input_data = InputData(bookmarks_filename, metadata_filename, images_directory, rotate_angle, actions, True)
         self.execute_callback(input_data)
 
 
