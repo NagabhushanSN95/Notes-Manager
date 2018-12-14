@@ -95,11 +95,12 @@ def scale_to_a4(directory):
     convert DSP_03.jpg -gravity Center -extent 2364x3344 -density 112.5926 -units pixelspercentimeter out2.jpg
     convert DSP_03.jpg -gravity Center -extent 2364x3344 -density 112.5926 -units pixelspercentimeter out2.pdf
     """
+    directory_backslash = directory.replace(" ", "\ ")
     for file_name in sorted(os.listdir(directory)):
-        file_name = file_name.replace(" ", "\ ")
-        command = "convert " + directory + "/" + file_name + ' -format "%[fx:w]" info:'
+        file_name_backslash = file_name.replace(" ", "\ ")
+        command = 'convert ' + directory_backslash + file_name_backslash + ' -format "%[fx:w]" info:'
         width = float(execute_cmd(command))
-        command = "convert " + directory + "/" + file_name + ' -format "%[fx:h]" info:'
+        command = 'convert ' + directory_backslash + file_name_backslash + ' -format "%[fx:h]" info:'
         height = float(execute_cmd(command))
         aspect_ratio = width / height
         a4_aspect_ratio = 1 / math.sqrt(2)
@@ -107,22 +108,21 @@ def scale_to_a4(directory):
             # Increase Width
             new_height = height
             new_width = a4_aspect_ratio * height
-            convert_to_a4(directory, file_name, new_width, new_height)
+            convert_to_a4(directory_backslash, file_name_backslash, new_width, new_height)
         elif aspect_ratio > a4_aspect_ratio:
             # Increase Height
             new_width = width
             new_height = width / a4_aspect_ratio
-            convert_to_a4(directory, file_name, new_width, new_height)
+            convert_to_a4(directory_backslash, file_name_backslash, new_width, new_height)
         else:
-            shutil.copyfile(directory + "/" + file_name, "./temp/scaled_images")
-            return
-    print("Scaling Images to A4 size complete")
+            shutil.copy(directory + file_name, './temp/scaled_images/')
+    print('Scaling Images to A4 size complete')
 
 
 def convert_to_a4(directory, file_name, new_width, new_height):
     density = new_height / 29.7  # Height of A4 = 29.7cm
-    command = "convert " + directory + "/" + file_name + " -gravity Center -extent " + str(new_width) + "x" + \
-              str(new_height) + " -density " + str(density) + " -units pixelspercentimeter ./temp/scaled_images/" \
+    command = 'convert ' + directory + file_name + ' -gravity Center -extent ' + str(new_width) + 'x' + \
+              str(new_height) + ' -density ' + str(density) + ' -units pixelspercentimeter ./temp/scaled_images/' \
               + file_name
     execute_cmd(command)
 
@@ -184,6 +184,6 @@ def main(input_data: InputData):
         title = parser.get_title()
         pdf_bookmarks = parser.get_pdf_bookmarks()
         add_bookmarks(title, pdf_bookmarks)
-    clean()
+    # clean()
     if Action.NOTIFY_COMPLETION in input_data.actions:
         print("Process Complete")
