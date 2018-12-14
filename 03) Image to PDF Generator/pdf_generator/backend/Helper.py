@@ -126,6 +126,12 @@ def convert_to_a4(directory, file_name, new_width, new_height):
     execute_cmd(command)
 
 
+def copy_to_scaled_images(directory):
+    for filename in sorted(os.listdir(directory)):
+        # Todo: This line iving error. Fix it
+        shutil.copy(os.path.join(directory, filename), './temp/scaled_images/')
+
+
 def convert_to_pdf(directory):
     print("Converting Images to PDFs")
     os.mkdir("./temp/pdfs")
@@ -176,6 +182,8 @@ def main(input_data: InputData):
     os.mkdir("./temp")
     if Action.SCALE_TO_A4 in input_data.actions:
         scale_to_a4(input_data.images_directory_path)
+    else:
+        copy_to_scaled_images(input_data.images_directory_path)
     if Action.CONVERT_TO_PDF in input_data.actions:
         convert_to_pdf(input_data.images_directory_path)
     if Action.MERGE_PDF in input_data.actions:
