@@ -3,32 +3,12 @@
 # Author: Nagabhushan S N
 import math
 import os
-import shlex
 import shutil
-import subprocess
 
 from backend.Parser import Parser
 from data.DataStructures import InputData
 from data.Enums import Action
-
-
-def prompt(prompt_string):
-    response = input(prompt_string)
-    if response == 'Y':
-        return True
-    else:
-        return False
-
-
-def execute_cmd(cmd, print_cmd=False):
-    if print_cmd:
-        print("terminal$ " + cmd)
-    if isinstance(cmd, list):
-        commands = cmd
-    else:
-        commands = shlex.split(cmd)
-    output = subprocess.Popen(commands, stdout=subprocess.PIPE).communicate()[0]
-    return output
+from utils.CommonUtilities import prompt, execute_cmd
 
 
 def rotate_files(directory, degrees):

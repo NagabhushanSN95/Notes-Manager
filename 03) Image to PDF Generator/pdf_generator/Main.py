@@ -4,14 +4,12 @@
 
 import argparse
 import os
-import shlex
 import shutil
-import subprocess
-from tkinter import messagebox
 
 from backend import Helper
 from data.DataStructures import InputData
 from frontend import GUI
+from utils.CommonUtilities import prompt, display_message
 from validators.InputValidator import InputValidator
 
 META_DATA_TITLE_KEY = 'Title'
@@ -21,28 +19,6 @@ OFFSET_CONST = 'Offset'
 PAGE_NOS_CONST = 'PageNos'
 
 
-def prompt(prompt_string, gui: bool = False):
-    if gui:
-        response = messagebox.askyesno(message=prompt_string, icon='warning')
-    else:
-        response = (input(prompt_string + " [Y/n]:")).lower() in 'yes'
-    if response:
-        return True
-    else:
-        return False
-
-
-def execute_cmd(cmd, print_cmd=False):
-    if print_cmd:
-        print("terminal$ " + cmd)
-    if isinstance(cmd, list):
-        commands = cmd
-    else:
-        commands = shlex.split(cmd)
-    output = subprocess.Popen(commands, stdout=subprocess.PIPE).communicate()[0]
-    return output
-
-
 def delete_temp_dir(gui: bool):
     # Remove temporary directory ./temp if it exists
     if os.path.exists("./temp"):
@@ -50,7 +26,7 @@ def delete_temp_dir(gui: bool):
                    "Do you want to remove it now?", gui)):
             shutil.rmtree("./temp")
         else:
-            print("Exiting program...")
+            display_message("Exiting program...", gui)
             exit()
 
 
