@@ -1,8 +1,11 @@
 ============================================================
-          Notes Manager v0.5 (-0-2018)
+          Notes Manager v0.5 (15-12-2018)
 ============================================================
  - Image to PDF Generator:
 	- Baseline changed to python3 from python2
+	- GUI added. CLI temporarily disabled
+	- Code restructured in accordance with OOP
+	- Legacy code retained
 ============================================================
 ============================================================
 
