@@ -23,7 +23,7 @@ PAGE_NOS_CONST = 'PageNos'
 
 
 def prompt(prompt_string):
-	response = raw_input(prompt_string)
+	response = input(prompt_string)
 	if response == 'Y':
 		return True
 	else:
@@ -51,6 +51,7 @@ def setup_args():
 						type=str, default='./Images')
 	parser.add_argument('--rotate', '-r', help="Angle in degrees to rotate all the images clockwise (default: 0)",
 						type=str, default=0)
+	parser.add_argument('--gui', '-g', help="Start GUI (Graphical User Interface)", action='store_true')
 	args = parser.parse_args()
 	return args
 
@@ -80,13 +81,13 @@ def validate_inputs(args):
 
 def read_inputs(args):
 	bookmarks_file_name = args.bookmarks
-	bookmarks_file = file(bookmarks_file_name, 'r')
+	bookmarks_file = open(bookmarks_file_name, 'r')
 	bookmarks_data = bookmarks_file.read().splitlines()
 	bookmarks_data = [line.strip() for line in bookmarks_data if line.strip()]
 	bookmarks_file.close()
 
 	meta_data_file_name = args.meta_data
-	meta_data_file = file(meta_data_file_name, 'r')
+	meta_data_file = open(meta_data_file_name, 'r')
 	meta_data_list = meta_data_file.read().splitlines()
 	meta_data_list = [line.strip() for line in meta_data_list if line.strip()]
 	# Convert list into a Dictionary
@@ -349,7 +350,7 @@ def add_bookmarks(title, meta_data):
 	cmd = "pdftk ./temp/merged.pdf dump_data > ./temp/meta_data.txt"
 	os.system(cmd)
 	# Append additional meta-data and bookmarks to existing meta-data
-	meta_data_file = file("./temp/meta_data.txt", 'a')
+	meta_data_file = open("./temp/meta_data.txt", 'a')
 	meta_data_file.writelines("%s\n" % item for item in meta_data)
 	meta_data_file.close()
 	title1 = title.replace(" ", "\ ")
