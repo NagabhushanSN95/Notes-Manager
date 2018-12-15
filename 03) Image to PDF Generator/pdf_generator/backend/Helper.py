@@ -109,8 +109,8 @@ def convert_to_a4(directory, file_name, new_width, new_height):
 
 
 def copy_to_scaled_images(directory):
+    os.mkdir("./temp/scaled_images")
     for filename in sorted(os.listdir(directory)):
-        # Todo: This line iving error. Fix it
         shutil.copy(os.path.join(directory, filename), './temp/scaled_images/')
 
 

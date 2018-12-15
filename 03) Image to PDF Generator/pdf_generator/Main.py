@@ -8,6 +8,7 @@ import shutil
 
 from backend import Helper
 from data.DataStructures import InputData
+from data.Enums import Action
 from frontend import GUI
 from utils.CommonUtilities import prompt, display_message
 from validators.InputValidator import InputValidator
@@ -41,15 +42,29 @@ def setup_args():
     parser.add_argument('--scaleA4', '-s', help="Scale images to A4 size. Whitespace will be padded if required",
                         action='store_true')
     parser.add_argument('--rotate', '-r', help="Angle in degrees to rotate all the images clockwise (default: 0)",
-                        type=str, default=0)
+                        type=str)
     parser.add_argument('--gui', '-g', help="Start GUI (Graphical User Interface)", action='store_true')
     args = parser.parse_args()
     return args
 
 
-def start_interactor(args):
-    if args.gui:
-        GUI.main(execute_callback)
+def parse_args(args):
+    bookmarks_filepath = args.bookmarks
+    metadata_filepath = args.meta_data
+    images_directory_path = args.directory
+    rotate_angle = args.rotate
+    actions = []
+    if args.scaleA4:
+        actions.append(Action.SCALE_TO_A4)
+    gui = args.gui
+    args_input_data = InputData(bookmarks_filepath, metadata_filepath, images_directory_path, rotate_angle, actions,
+                                gui)
+    return args_input_data
+
+
+def start_interactor(args_input_data):
+    if args_input_data.gui:
+        GUI.main(args_input_data, execute_callback)
     else:
         print('CLI not yet added')
 
@@ -63,7 +78,8 @@ def execute_callback(input_data: InputData):
 def main():
     args = setup_args()
     delete_temp_dir(args.gui)
-    start_interactor(args)
+    args_input_data = parse_args(args)
+    start_interactor(args_input_data)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,8 @@
 # Shree KRISHNAya Namaha
 # Graphical Interface
 # Author: Nagabhushan S N
-
+import json
+import os
 import tkinter
 from tkinter import Button, Checkbutton, Entry, Frame, Label, filedialog
 from tkinter.filedialog import askopenfilename
@@ -11,40 +12,43 @@ from data.Enums import Action
 
 
 class NotesManagerGui(Frame):
-    def __init__(self, parent=None, execute_callback=None):
+    def __init__(self, parent=None, fill_input_data: InputData = None, execute_callback=None):
         Frame.__init__(self, parent)
         self.parent = parent
         self.execute_callback = execute_callback
         self.pack()
         self.winfo_toplevel().title('Images to PDF Generator')
 
+        if fill_input_data is None:
+            fill_input_data = InputData(None, None, None, 0, [], True)
+
         self.res_frame = FileChooserFrame(self)
         self.res_frame.pack()
-        self.add_res_frame()
+        self.add_res_frame(fill_input_data)
 
         self.actions_frame = ActionsFrame(self)
         self.actions_frame.pack()
-        self.add_actions()
+        self.add_actions(fill_input_data)
 
-        self.inputs_frame = InputsFrame(self)
+        self.inputs_frame = InputsFrame(self, fill_input_data=fill_input_data)
         self.inputs_frame.pack()
 
         button = Button(self, text='Execute', command=self.execute)
         button.pack()
 
-    def add_res_frame(self):
-        self.res_frame.add_component('Bookmarks: ')
-        self.res_frame.add_component('Meta Data: ')
-        self.res_frame.add_component('Directory: ', file_chooser=False)
+    def add_res_frame(self, fill_input_data: InputData):
+        self.res_frame.add_component('Bookmarks: ', fill_input_data.bookmarks_filepath)
+        self.res_frame.add_component('Meta Data: ', fill_input_data.metadata_filepath)
+        self.res_frame.add_component('Directory: ', fill_input_data.images_directory_path, file_chooser=False)
 
-    def add_actions(self):
-        self.actions_frame.add_action(Action.RENAME_IMAGES)
-        self.actions_frame.add_action(Action.SCALE_TO_A4)
-        self.actions_frame.add_action(Action.CONVERT_TO_PDF)
-        self.actions_frame.add_action(Action.MERGE_PDF)
-        self.actions_frame.add_action(Action.ADD_BOOKMARKS)
-        self.actions_frame.add_action(Action.CLEAN_TEMP_FILES)
-        self.actions_frame.add_action(Action.NOTIFY_COMPLETION)
+    def add_actions(self, fill_input_data: InputData):
+        self.actions_frame.add_action(Action.RENAME_IMAGES, Action.RENAME_IMAGES in fill_input_data.actions)
+        self.actions_frame.add_action(Action.SCALE_TO_A4, Action.SCALE_TO_A4 in fill_input_data.actions)
+        self.actions_frame.add_action(Action.CONVERT_TO_PDF, Action.CONVERT_TO_PDF in fill_input_data.actions)
+        self.actions_frame.add_action(Action.MERGE_PDF, Action.MERGE_PDF in fill_input_data.actions)
+        self.actions_frame.add_action(Action.ADD_BOOKMARKS, Action.ADD_BOOKMARKS in fill_input_data.actions)
+        self.actions_frame.add_action(Action.CLEAN_TEMP_FILES, Action.CLEAN_TEMP_FILES in fill_input_data.actions)
+        self.actions_frame.add_action(Action.NOTIFY_COMPLETION, Action.NOTIFY_COMPLETION in fill_input_data.actions)
         self.actions_frame.add_buttons()
 
     def execute(self):
@@ -54,7 +58,6 @@ class NotesManagerGui(Frame):
         if not images_directory.endswith('/'):
             images_directory = images_directory + '/'
         actions = []
-        # Todo: When temp folder exists and GUI is invoked, actions list is empty. Fix it.
         for action_component in self.actions_frame.components:
             if action_component[1].get() == 1:
                 action = Action.get_action(action_component[0].cget('text'))
@@ -62,7 +65,17 @@ class NotesManagerGui(Frame):
         rotate_angle = self.inputs_frame.components[0][1].get()
         self.parent.destroy()
         input_data = InputData(bookmarks_filename, metadata_filename, images_directory, rotate_angle, actions, True)
+        self.save_state(input_data)
         self.execute_callback(input_data)
+
+    @staticmethod
+    def save_state(input_data: InputData):
+        serialised_dict = {key: str(value) for key, value in input_data.__dict__.items()}
+        if not os.path.exists('./pdf_generator/AppData/'):
+            os.makedirs('./pdf_generator/AppData/')
+        with open('./pdf_generator/AppData/saved_state.txt', 'w') as state_file:
+            state_file.write(json.dumps(serialised_dict))
+        print('State saved.')
 
 
 class FileChooserFrame(Frame):
@@ -103,8 +116,9 @@ class ActionsFrame(Frame):
         self.pack()
         self.components = []
 
-    def add_action(self, action_name):
+    def add_action(self, action_name, default_state=False):
         var = tkinter.IntVar()
+        var.set(default_state)
         checkbutton = Checkbutton(self, text=action_name, variable=var)
         checkbutton.pack(anchor=tkinter.W)
         self.components.append((checkbutton, var))
@@ -125,18 +139,22 @@ class ActionsFrame(Frame):
 
 
 class InputsFrame(Frame):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, fill_input_data=None):
         Frame.__init__(self, parent)
         self.parent = parent
         self.pack()
         self.components = []
-        self.add_components()
+        self.add_components(fill_input_data)
 
-    def add_components(self):
+    def add_components(self, fill_input_data: InputData):
+        if fill_input_data and fill_input_data.rotate_angle:
+            fill_rotate_angle = fill_input_data.rotate_angle
+        else:
+            fill_rotate_angle = '0'
         rotate_label = Label(self, text='Rotate Angle (in degrees)')
         rotate_label.grid(row=0, column=0)
         rotate_entry = Entry(self)
-        rotate_entry.insert(0, '0')
+        rotate_entry.insert(0, fill_rotate_angle)
         rotate_entry.grid(row=0, column=1)
         rotate_cc_label = Label(self, text='counter-clockwise')
         rotate_cc_label.grid(row=0, column=2)
@@ -156,8 +174,22 @@ class ButtonsFrame(Frame):
         self.components.append(button)
 
 
-def main(execute_function):
+def read_saved_state(args_input_data: InputData) -> InputData:
+    saved_state_dict = {}
+    if os.path.exists('pdf_generator/AppData/saved_state.txt'):
+        with open('pdf_generator/AppData/saved_state.txt') as state_file:
+            saved_state_dict = json.loads(state_file.readline())
+            print(saved_state_dict)
+    saved_input_data = InputData.from_dict(saved_state_dict)
+    args_input_data.remove_invalid_fields()
+    saved_input_data.remove_invalid_fields()
+    fill_input_data = InputData.merge(args_input_data, saved_input_data)
+    return fill_input_data
+
+
+def main(args_input_data: InputData, execute_function):
     print('GUI started')
+    fill_input_data = read_saved_state(args_input_data)
     root = tkinter.Tk()
-    NotesManagerGui(root, execute_function)
+    NotesManagerGui(root, fill_input_data, execute_function)
     root.mainloop()
