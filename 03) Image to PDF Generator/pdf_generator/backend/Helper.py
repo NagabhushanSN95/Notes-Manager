@@ -20,6 +20,8 @@ def rotate_files(directory, degrees):
 
 
 def rename_files(directory, title, page_nos, bookmarks_file_name):
+    if title is None:
+        title = 'Image '
     print("Renaming Files")
     i = 0
     os.chdir(directory)
@@ -134,16 +136,24 @@ def merge_files():
     print("Merging complete")
 
 
-def add_bookmarks(title, meta_data):
+def add_bookmarks(meta_data):
     cmd = "pdftk ./temp/merged.pdf dump_data > ./temp/meta_data.txt"
     os.system(cmd)
     # Append additional meta-data and bookmarks to existing meta-data
     meta_data_file = open("./temp/meta_data.txt", 'a')
     meta_data_file.writelines("%s\n" % item for item in meta_data)
     meta_data_file.close()
-    title1 = title.replace(" ", "\ ")
-    cmd = "pdftk ./temp/merged.pdf update_info ./temp/meta_data.txt output " + title1 + ".pdf"
+    cmd = "pdftk ./temp/merged.pdf update_info ./temp/meta_data.txt output bookmarked.pdf"
     os.system(cmd)
+
+
+def copy_final_file(title: str):
+    if title is None:
+        title = 'output'
+    if os.path.exists('./temp/bookmarked.pdf'):
+        shutil.copy('./temp/bookmarked.pdf', title + '.pdf')
+    elif os.path.exists('./temp/merged.pdf'):
+        shutil.copy('./temp/merged.pdf', title + '.pdf')
 
 
 def clean():
@@ -169,10 +179,11 @@ def main(input_data: InputData):
     if Action.MERGE_PDF in input_data.actions:
         merge_files()
     if Action.ADD_BOOKMARKS in input_data.actions:
-        title = parser.get_title()
         pdf_bookmarks = parser.get_pdf_bookmarks()
-        add_bookmarks(title, pdf_bookmarks)
+        add_bookmarks(pdf_bookmarks)
     if Action.CLEAN_TEMP_FILES in input_data.actions:
+        title = parser.get_title()
+        copy_final_file(title)
         clean()
     if Action.NOTIFY_COMPLETION in input_data.actions:
         print("Process Complete")

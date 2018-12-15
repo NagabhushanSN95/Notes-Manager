@@ -1,6 +1,7 @@
 # Shree KRISHNAya Namaha
 # Parse Bookmarks and Meta-Data File
 # Author: Nagabhushan S N
+import os
 
 from data.Constants import META_DATA_AUTHOR_KEY, META_DATA_TITLE_KEY, NUM_PAGES_CONST, OFFSET_CONST, PAGE_NOS_CONST
 from data.DataStructures import InputData
@@ -17,12 +18,13 @@ class Parser:
         return lines
 
     def get_metadata_dict(self):
-        with open(self.input_data.metadata_filepath) as md_file:
-            lines = md_file.readlines()
-        lines = [line.strip() for line in lines if line.strip()]
         metadata_dict = {}
-        for i in range(int(len(lines) / 2)):
-            metadata_dict[lines[2 * i]] = lines[2 * i + 1]
+        if os.path.exists(self.input_data.metadata_filepath):
+            with open(self.input_data.metadata_filepath) as md_file:
+                lines = md_file.readlines()
+            lines = [line.strip() for line in lines if line.strip()]
+            for i in range(int(len(lines) / 2)):
+                metadata_dict[lines[2 * i]] = lines[2 * i + 1]
         return metadata_dict
 
     @staticmethod
@@ -51,7 +53,11 @@ class Parser:
         return pdf_bookmarks
 
     def get_title(self):
-        return self.get_metadata_dict()[META_DATA_TITLE_KEY]
+        metadata_dict = self.get_metadata_dict()
+        if META_DATA_TITLE_KEY in metadata_dict:
+            return self.get_metadata_dict()[META_DATA_TITLE_KEY]
+        else:
+            return None
 
 
 class PageNumbersGenerator:
@@ -132,12 +138,14 @@ class PdfBookmarksGenerator:
     @staticmethod
     def generate_pdf_bookmarks(meta_data_dict, bookmarks_data):
         meta_data = list()
-        meta_data.append("InfoBegin")
-        meta_data.append("InfoKey: Title")
-        meta_data.append("InfoValue: " + meta_data_dict[META_DATA_TITLE_KEY])
-        meta_data.append("InfoBegin")
-        meta_data.append("InfoKey: Author")
-        meta_data.append("InfoValue: " + meta_data_dict[META_DATA_AUTHOR_KEY])
+        if META_DATA_TITLE_KEY in meta_data_dict:
+            meta_data.append("InfoBegin")
+            meta_data.append("InfoKey: Title")
+            meta_data.append("InfoValue: " + meta_data_dict[META_DATA_TITLE_KEY])
+        if META_DATA_AUTHOR_KEY in meta_data_dict:
+            meta_data.append("InfoBegin")
+            meta_data.append("InfoKey: Author")
+            meta_data.append("InfoValue: " + meta_data_dict[META_DATA_AUTHOR_KEY])
         current_level = 0
         current_page_num = 1
         for i in range(0, len(bookmarks_data)):
