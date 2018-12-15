@@ -8,7 +8,7 @@ into the PDF file.
    So, in brief, this script generates a full-fledged PDF notes from scanned images.
 
 ## Dependencies
-* python2
+* python3
 * imagemagick
 * pdftk
 
@@ -67,10 +67,14 @@ Author
   ```
 * Now copy your scanned images to this `Images` directory
 * Create 2 new text files and write your `meta-data` and `bookmarks` in the given format
-* Run the python program by executing the following command in the terminal
+* Run the python program by executing the following command in the terminal (CLI Mode)
   ```
-  python2 Image_To_PDF_Generator.py -md Meta-Data.txt -b Bookmarks.txt -d ./Images/
+  python3 pdf_generator/Main.py -md Meta-Data.txt -b Bookmarks.txt -d ./Images/
   ```
+* To run the program in GUI mode, execute the below comand
+  ```
+  python3 pdf_generator/Main.py -g
+   ```
 * This creates a new pdf file `<TITLE>.pdf` with your bookmarks.
 * If you need to rotate all your images by a certain degree (clockwise), you can pass it using the rotate (-r) option
   ```
@@ -79,10 +83,10 @@ Author
 
 ### Note
 * If you've saved Meta-Data, Bookmarks, Images in the default names, you can omit passing them as arguments.
-* When passing meta-data or bookmarks file-names as arguments, autocomplete will not work. If you want the 
-autocomplete to work, then execute the below command in terminal and then run the python program as shown
+* When passing meta-data or bookmarks file-names as arguments (in CLI mode), autocomplete will not work. If you want 
+the autocomplete to work, then execute the below command in terminal and then run the python program as shown
   ```
-  chmod u+x Image_To_PDF_Generator.py
-  ./Image_To_PDF_Generator.py -md Meta-Data.txt -b Bookmarks.txt -d ./Images/
+  chmod u+x pdf_generator/Main.py
+  ./pdf_generator/Main.py -md Meta-Data.txt -b Bookmarks.txt -d ./Images/
   ```
 * If bookmarks are not added in the PDF file, please check if your `pdftk` version is greater than 1.45
