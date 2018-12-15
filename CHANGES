@@ -1,10 +1,20 @@
 ============================================================
+          Notes Manager v0.4.3 (01-10-2018)
+============================================================
+ - Image to PDF Generator:
+    - Images will be scaled to A4 size
+    - README.md updated
+============================================================
+============================================================
+
+
+============================================================
           Notes Manager v0.4.2 (27-03-2018)
 ============================================================
  - Image to PDF Generator:
     - Added if __name__ == '__main__'
-	- Added support to rotate all images
- 	- README.md updated
+    - Added support to rotate all images
+    - README.md updated
 ============================================================
 ============================================================
 
@@ -13,9 +23,9 @@
           Notes Manager v0.4.1 (01-01-2018)
 ============================================================
  - Image to PDF Generator:
-	- Minor bug fix. Earlier, if the file 'Image_To_PDF_Generator.py' was imported into another python program,
-	    it used to execute the main method in 'Image_To_PDF_Generator.py'
-	- File formatted
+    - Minor bug fix. Earlier, if the file 'Image_To_PDF_Generator.py' was imported into another python program,
+        it used to execute the main method in 'Image_To_PDF_Generator.py'
+    - File formatted
  - .idea directory removed.
  - .gitignore updated.
 ============================================================
@@ -28,9 +38,9 @@
  - PyCharm files (.idea directory) added
  - README.md updated
  - Image to PDF Generator:
-	- Sample files for Bookmarks and Meta-Data added
- 	- Empty Images directory added
- 	- README.md added
+    - Sample files for Bookmarks and Meta-Data added
+    - Empty Images directory added
+    - README.md added
 ============================================================
 ============================================================
 
@@ -39,11 +49,11 @@
           Notes Manager v0.3.2 (16-07-2017)
 ============================================================
  - Image to PDF Generator:
-	- In Bookmarks, offset can be added
- 	- In Bookmarks, individual page numbers can be mentioned
- 	- Bug Fix: Program used to crash when the Bookmarks file or Meta-Data file or Images folder doesn't exist
- 	- Bug Fix: Program used to crash when reading meta-data (if it exists)
- 	- Code refined and Optimised
+    - In Bookmarks, offset can be added
+     - In Bookmarks, individual page numbers can be mentioned
+     - Bug Fix: Program used to crash when the Bookmarks file or Meta-Data file or Images folder doesn't exist
+     - Bug Fix: Program used to crash when reading meta-data (if it exists)
+     - Code refined and Optimised
 ============================================================
 ============================================================
 
@@ -52,11 +62,11 @@
           Notes Manager v0.3.1 (15-07-2017)
 ============================================================
  - Image to PDF Generator:
-	- Added new optional argument - Meta-Data file with default value 'Meta-Data.txt'
- 	- Title and Author will be read from Meta-Data file and hence these arguments are not required
-	- Default value for argument 'Bookmarks file' set to 'Bookmarks.txt' and hence the argument is no longer mandatory
-	- Added prompts for warnings whether to proceed or not
-	- Code refined and Optimised
+    - Added new optional argument - Meta-Data file with default value 'Meta-Data.txt'
+    - Title and Author will be read from Meta-Data file and hence these arguments are not required
+    - Default value for argument 'Bookmarks file' set to 'Bookmarks.txt' and hence the argument is no longer mandatory
+    - Added prompts for warnings whether to proceed or not
+    - Code refined and Optimised
 ============================================================
 ============================================================
 
