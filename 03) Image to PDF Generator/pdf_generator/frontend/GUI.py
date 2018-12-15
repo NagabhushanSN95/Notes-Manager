@@ -55,8 +55,8 @@ class NotesManagerGui(Frame):
         actions = []
         for action_component in self.actions_frame.components:
             if action_component[1].get() == 1:
-                action_name = Action.get_action(action_component[0].cget('text'))
-                actions.append(action_name)
+                action = Action.get_action(action_component[0].cget('text'))
+                actions.append(action)
         rotate_angle = self.inputs_frame.components[0][1].get()
         self.parent.destroy()
         input_data = InputData(bookmarks_filename, metadata_filename, images_directory, rotate_angle, actions, True)
