@@ -45,6 +45,7 @@ class NotesManagerGui(Frame):
         self.actions_frame.add_action(Action.ADD_BOOKMARKS)
         self.actions_frame.add_action(Action.CLEAN_TEMP_FILES)
         self.actions_frame.add_action(Action.NOTIFY_COMPLETION)
+        self.actions_frame.add_buttons()
 
     def execute(self):
         bookmarks_filename = self.res_frame.components[0][1].get()
@@ -53,6 +54,7 @@ class NotesManagerGui(Frame):
         if not images_directory.endswith('/'):
             images_directory = images_directory + '/'
         actions = []
+        # Todo: When temp folder exists and GUI is invoked, actions list is empty. Fix it.
         for action_component in self.actions_frame.components:
             if action_component[1].get() == 1:
                 action = Action.get_action(action_component[0].cget('text'))
@@ -106,6 +108,20 @@ class ActionsFrame(Frame):
         checkbutton = Checkbutton(self, text=action_name, variable=var)
         checkbutton.pack(anchor=tkinter.W)
         self.components.append((checkbutton, var))
+
+    def add_buttons(self):
+        select_all_button = Button(self, text='Select All', command=self.check_all_buttons)
+        select_all_button.pack()
+        select_none_button = Button(self, text='Select None', command=self.uncheck_all_buttons)
+        select_none_button.pack()
+
+    def check_all_buttons(self):
+        for component in self.components:
+            component[0].select()
+
+    def uncheck_all_buttons(self):
+        for component in self.components:
+            component[1].set(0)
 
 
 class InputsFrame(Frame):
