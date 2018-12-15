@@ -1,10 +1,10 @@
 # Shree KRISHNAya Namaha
 # Common Utility Functions
 # Author: Nagabhushan
+
 import shlex
 import subprocess
-
-from tkinter import messagebox, Tk
+from tkinter import Tk, messagebox
 
 
 def prompt(prompt_string):

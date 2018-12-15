@@ -8,7 +8,7 @@ import shutil
 from backend.Parser import Parser
 from data.DataStructures import InputData
 from data.Enums import Action
-from utils.CommonUtilities import yes_no_prompt, execute_cmd
+from utils.CommonUtilities import execute_cmd, yes_no_prompt
 
 
 def rotate_files(directory, degrees):
