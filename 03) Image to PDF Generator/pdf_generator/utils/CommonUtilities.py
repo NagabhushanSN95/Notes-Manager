@@ -4,11 +4,12 @@
 import shlex
 import subprocess
 
-from tkinter import messagebox
+from tkinter import messagebox, Tk
 
 
 def prompt(prompt_string, gui: bool = False):
     if gui:
+        Tk().withdraw()
         response = messagebox.askyesno(message=prompt_string)
     else:
         response = (input(prompt_string + " [Y/n]:")).lower() in 'yes'
@@ -20,6 +21,7 @@ def prompt(prompt_string, gui: bool = False):
 
 def display_message(message_string: str, gui: bool = False):
     if gui:
+        Tk().withdraw()
         messagebox.showinfo(message=message_string)
     else:
         print(message_string)

@@ -162,7 +162,7 @@ def main(input_data: InputData):
     os.mkdir("./temp")
     if Action.SCALE_TO_A4 in input_data.actions:
         scale_to_a4(input_data.images_directory_path)
-    else:
+    elif Action.CONVERT_TO_PDF in input_data.actions:
         copy_to_scaled_images(input_data.images_directory_path)
     if Action.CONVERT_TO_PDF in input_data.actions:
         convert_to_pdf(input_data.images_directory_path)
