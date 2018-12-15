@@ -179,7 +179,6 @@ def read_saved_state(args_input_data: InputData) -> InputData:
     if os.path.exists('pdf_generator/AppData/saved_state.txt'):
         with open('pdf_generator/AppData/saved_state.txt') as state_file:
             saved_state_dict = json.loads(state_file.readline())
-            print(saved_state_dict)
     saved_input_data = InputData.from_dict(saved_state_dict)
     args_input_data.remove_invalid_fields()
     saved_input_data.remove_invalid_fields()
@@ -187,9 +186,9 @@ def read_saved_state(args_input_data: InputData) -> InputData:
     return fill_input_data
 
 
-def main(args_input_data: InputData, execute_function):
+def main(args_input_data: InputData, execute_callback):
     print('GUI started')
     fill_input_data = read_saved_state(args_input_data)
     root = tkinter.Tk()
-    NotesManagerGui(root, fill_input_data, execute_function)
+    NotesManagerGui(root, fill_input_data, execute_callback)
     root.mainloop()

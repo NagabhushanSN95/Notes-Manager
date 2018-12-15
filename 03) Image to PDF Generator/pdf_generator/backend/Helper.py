@@ -8,7 +8,7 @@ import shutil
 from backend.Parser import Parser
 from data.DataStructures import InputData
 from data.Enums import Action
-from utils.CommonUtilities import prompt, execute_cmd
+from utils.CommonUtilities import yes_no_prompt, execute_cmd
 
 
 def rotate_files(directory, degrees):
@@ -29,13 +29,13 @@ def rename_files(directory, title, page_nos, bookmarks_file_name, gui=False):
     num_pages = len(page_nos)
     # Provide a prompt to continue or exit
     if num_files < num_pages:
-        if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(
+        if not yes_no_prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(
                 num_pages) + " pages. But the directory '" + directory + "' has only " + str(
             num_files) + " files. Do you want to proceed? [Y/n]:", gui):
             print("Exiting program...")
             exit()
     elif num_files > num_pages:
-        if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(
+        if not yes_no_prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(
                 num_pages) + " pages. But the directory '" + directory + "' has " + str(
             num_files) + " files. First " + str(
             num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:", gui):

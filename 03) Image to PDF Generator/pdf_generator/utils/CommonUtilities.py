@@ -7,7 +7,12 @@ import subprocess
 from tkinter import messagebox, Tk
 
 
-def prompt(prompt_string, gui: bool = False):
+def prompt(prompt_string):
+    response = input(prompt_string)
+    return response.lower() in 'yes'
+
+
+def yes_no_prompt(prompt_string, gui: bool = False):
     if gui:
         root = Tk()
         root.withdraw()
