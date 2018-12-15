@@ -19,7 +19,7 @@ def rotate_files(directory, degrees):
     print("Rotating Files complete")
 
 
-def rename_files(directory, title, page_nos, bookmarks_file_name):
+def rename_files(directory, title, page_nos, bookmarks_file_name, gui=False):
     if title is None:
         title = 'Image '
     print("Renaming Files")
@@ -31,14 +31,14 @@ def rename_files(directory, title, page_nos, bookmarks_file_name):
     if num_files < num_pages:
         if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(
                 num_pages) + " pages. But the directory '" + directory + "' has only " + str(
-            num_files) + " files. Do you want to proceed? [Y/n]:"):
+            num_files) + " files. Do you want to proceed? [Y/n]:", gui):
             print("Exiting program...")
             exit()
     elif num_files > num_pages:
         if not prompt("Warning: " + bookmarks_file_name + " lists a total of " + str(
                 num_pages) + " pages. But the directory '" + directory + "' has " + str(
             num_files) + " files. First " + str(
-            num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:"):
+            num_pages) + " files will be renamed. Do you want to proceed? [Y/n]:", gui):
             print("Exiting program...")
             exit()
 
@@ -143,7 +143,7 @@ def add_bookmarks(meta_data):
     meta_data_file = open("./temp/meta_data.txt", 'a')
     meta_data_file.writelines("%s\n" % item for item in meta_data)
     meta_data_file.close()
-    cmd = "pdftk ./temp/merged.pdf update_info ./temp/meta_data.txt output bookmarked.pdf"
+    cmd = "pdftk ./temp/merged.pdf update_info ./temp/meta_data.txt output ./temp/bookmarked.pdf"
     os.system(cmd)
 
 
@@ -168,7 +168,8 @@ def main(input_data: InputData):
     if Action.RENAME_IMAGES in input_data.actions:
         title = parser.get_title()
         page_numbers = parser.get_page_numbers()
-        rename_files(input_data.images_directory_path, title, page_numbers, input_data.bookmarks_filepath)
+        rename_files(input_data.images_directory_path, title, page_numbers, input_data.bookmarks_filepath,
+                     input_data.gui)
     os.mkdir("./temp")
     if Action.SCALE_TO_A4 in input_data.actions:
         scale_to_a4(input_data.images_directory_path)

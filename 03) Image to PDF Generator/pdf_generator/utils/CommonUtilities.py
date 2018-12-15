@@ -4,13 +4,15 @@
 import shlex
 import subprocess
 
-from tkinter import messagebox
+from tkinter import messagebox, Tk
 
 
 def prompt(prompt_string, gui: bool = False):
     if gui:
-        # Tk().withdraw()
+        root = Tk()
+        root.withdraw()
         response = messagebox.askyesno(message=prompt_string)
+        root.destroy()
     else:
         response = (input(prompt_string + " [Y/n]:")).lower() in 'yes'
     if response:
@@ -21,8 +23,10 @@ def prompt(prompt_string, gui: bool = False):
 
 def display_message(message_string: str, gui: bool = False):
     if gui:
-        # Tk().withdraw()
+        root = Tk()
+        root.withdraw()
         messagebox.showinfo(message=message_string)
+        root.destroy()
     else:
         print(message_string)
 
