@@ -9,8 +9,8 @@ import shutil
 from backend import Helper
 from data.DataStructures import InputData
 from data.Enums import Action
-from frontend import GUI, CLI
-from utils.CommonUtilities import yes_no_prompt, display_message
+from frontend import CLI, GUI
+from utils.CommonUtilities import display_message, yes_no_prompt
 from validators.InputValidator import InputValidator
 
 META_DATA_TITLE_KEY = 'Title'
@@ -24,7 +24,7 @@ def delete_temp_dir(gui: bool):
     # Remove temporary directory ./temp if it exists
     if os.path.exists("./temp"):
         if (yes_no_prompt("Directory temp already exists. It needs to be removed to proceed. "
-                   "Do you want to remove it now?", gui)):
+                          "Do you want to remove it now?", gui)):
             shutil.rmtree("./temp")
         else:
             display_message("Exiting program...", gui)
