@@ -1,4 +1,29 @@
 ============================================================
+          Notes Manager v0.5.1 (15-12-2018)
+============================================================
+ - Image to PDF Generator:
+    - Meta-Data file is optional
+    - Bookmarks file is mandatory only if 'Rename Images' or 'Add Bookmarks' is selected
+    - State will be saved and restored.
+    - 'Select All' and 'Select None' buttons added.
+    - Minor improvements and bug fixes.
+============================================================
+============================================================
+
+
+============================================================
+          Notes Manager v0.5 (15-12-2018)
+============================================================
+ - Image to PDF Generator:
+	- Baseline changed to python3 from python2
+	- GUI added. CLI temporarily disabled
+	- Code restructured in accordance with OOP
+	- Legacy code retained
+============================================================
+============================================================
+
+
+============================================================
           Notes Manager v0.4.3 (01-10-2018)
 ============================================================
  - Image to PDF Generator:
